@@ -54,13 +54,22 @@ function validar(d: DatosRegistro): string | null {
 }
 
 export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRegistro> {
+  const rid = Math.random().toString(36).slice(2, 8); // id corto para agrupar los logs de este intento
+  const log = (...args: unknown[]) => console.log(`[registro:${rid}]`, ...args);
+
   const errorValidacion = validar(datos);
-  if (errorValidacion) return { ok: false, error: errorValidacion };
+  if (errorValidacion) {
+    log('validación falló:', errorValidacion);
+    return { ok: false, error: errorValidacion };
+  }
 
   const codigo = normalizarCodigo(datos.codigo ?? '');
   if (!codigo) {
+    log('formato de código inválido, entrada:', JSON.stringify(datos.codigo));
     return { ok: false, error: 'El código no tiene el formato correcto (ALF-XXXX-XXXX).' };
   }
+
+  log('arranca, código normalizado:', codigo, 'correo:', datos.correo);
 
   const admin = createAdminClient();
   const correo = datos.correo.trim().toLowerCase();
@@ -74,9 +83,19 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
     .eq('codigo', codigo)
     .maybeSingle();
 
-  if (errorCodigo) return { ok: false, error: 'No pudimos validar el código. Probá de nuevo.' };
-  if (!fila) return { ok: false, error: 'Ese código no existe. Revisá tu voucher e intentá de nuevo.' };
-  if (fila.usado) return { ok: false, error: 'Ese código ya fue usado para activar otra cuenta.' };
+  if (errorCodigo) {
+    log('error consultando codes:', errorCodigo.message, errorCodigo.code);
+    return { ok: false, error: 'No pudimos validar el código. Probá de nuevo.' };
+  }
+  if (!fila) {
+    log('código no encontrado en la tabla codes:', codigo);
+    return { ok: false, error: 'Ese código no existe. Revisá tu voucher e intentá de nuevo.' };
+  }
+  log('código encontrado, id:', fila.id, 'usado:', fila.usado);
+  if (fila.usado) {
+    log('rechazado: ya estaba usado en el paso 1');
+    return { ok: false, error: 'Ese código ya fue usado para activar otra cuenta.' };
+  }
 
   // 2. Crear el usuario (el código es la validación de compra, así que el correo
   //    se da por confirmado; la recuperación de contraseña igual va por correo).
@@ -88,6 +107,7 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
   });
 
   if (errorUsuario || !creado?.user) {
+    log('error creando usuario en Auth:', errorUsuario?.message, errorUsuario?.status);
     const msg = errorUsuario?.message ?? '';
     if (/already|registered|exists/i.test(msg)) {
       return { ok: false, error: 'Ya existe una cuenta con ese correo. Iniciá sesión.' };
@@ -95,9 +115,11 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
     return { ok: false, error: 'No pudimos crear tu cuenta. Probá de nuevo en un rato.' };
   }
   const userId = creado.user.id;
+  log('usuario creado en Auth, id:', userId);
 
   const limpiarUsuario = async () => {
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    log('deshaciendo: borrando usuario', userId);
+    await admin.auth.admin.deleteUser(userId).catch((e) => log('fallo al borrar usuario:', e));
   };
 
   // 3. Reserva ATÓMICA del código: solo pasa si sigue sin usarse.
@@ -110,13 +132,24 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
     .select('id');
 
   if (errorReserva || !reservado || reservado.length === 0) {
+    log(
+      'reserva del código falló: error=',
+      errorReserva?.message,
+      'filas afectadas=',
+      reservado?.length ?? 'null',
+    );
     await limpiarUsuario();
     return { ok: false, error: 'Ese código ya fue usado para activar otra cuenta.' };
   }
+  log('código reservado ok');
 
   const liberarCodigo = async () => {
-    // supabase-js no lanza: los errores vienen en el resultado, acá se ignoran
-    await admin.from('codes').update({ usado: false, profile_id: null }).eq('id', fila.id);
+    log('deshaciendo: liberando código', fila.id);
+    const { error } = await admin
+      .from('codes')
+      .update({ usado: false, profile_id: null })
+      .eq('id', fila.id);
+    if (error) log('fallo al liberar código:', error.message);
   };
 
   // 4. Perfil + carrera inicial.
@@ -135,10 +168,12 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
   });
 
   if (errorPerfil) {
+    log('error creando perfil:', errorPerfil.message, errorPerfil.code, errorPerfil.details);
     await liberarCodigo();
     await limpiarUsuario();
     return { ok: false, error: 'No pudimos crear tu perfil. Probá de nuevo.' };
   }
+  log('perfil creado ok');
 
   const { error: errorRun } = await admin.from('challenge_runs').insert({
     profile_id: userId,
@@ -147,11 +182,13 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
   });
 
   if (errorRun) {
+    log('error creando challenge_run:', errorRun.message, errorRun.code);
     await admin.from('profiles').delete().eq('id', userId);
     await liberarCodigo();
     await limpiarUsuario();
     return { ok: false, error: 'No pudimos arrancar tu reto. Probá de nuevo.' };
   }
+  log('challenge_run creado ok, registro completo');
 
   // 5. Iniciar sesión en este dispositivo (cookies persistentes).
   const supabase = await createClient();
@@ -159,6 +196,7 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
     email: correo,
     password: datos.password,
   });
+  if (errorLogin) log('login post-registro falló (no bloqueante):', errorLogin.message);
 
   return { ok: true, sesionIniciada: !errorLogin };
 }

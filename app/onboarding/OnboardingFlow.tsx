@@ -4,7 +4,7 @@
 // Una pregunta por pantalla, barra de progreso arriba, botón negro abajo.
 // Los datos se juntan acá y recién en el último paso (código) se crea la cuenta.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { registrarCuenta } from '@/app/actions/registro';
@@ -130,11 +130,16 @@ export default function OnboardingFlow() {
     return null;
   };
 
+  const enviandoRef = useRef(false); // bloquea doble-toque sin esperar el re-render de React
+
   const enviarRegistro = async () => {
+    if (enviandoRef.current) return;
+    enviandoRef.current = true;
     setError(null);
     const codigoLimpio = datos.codigo.toUpperCase().replace(/[^A-Z0-9]/g, '');
     if (!/^ALF[A-Z0-9]{8}$/.test(codigoLimpio)) {
       setError('El código tiene el formato ALF-XXXX-XXXX. Revisá tu voucher.');
+      enviandoRef.current = false;
       return;
     }
     setEnviando(true);
@@ -164,6 +169,7 @@ export default function OnboardingFlow() {
       setError('Algo salió mal. Revisá tu conexión y probá de nuevo.');
     } finally {
       setEnviando(false);
+      enviandoRef.current = false;
     }
   };
 
