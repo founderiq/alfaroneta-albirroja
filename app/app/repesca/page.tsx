@@ -25,21 +25,21 @@ export default async function RepescaPage() {
     <main className="flex flex-1 flex-col">
       <Link
         href="/app"
-        className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold shadow-sm"
+        className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-superficie px-4 py-2 text-sm font-bold text-white"
       >
         ← El partido de hoy
       </Link>
 
-      <h1 className="text-3xl font-black">Repesca</h1>
-      <p className="mt-2 text-neutral-600">
+      <h1 className="text-3xl font-black">Corregir día anterior</h1>
+      <p className="mt-2 text-tenue">
         {hayAyer ? (
           <>
             ¿Anoche te olvidaste de marcar? Podés completar lo de{' '}
-            <strong>{formatoLargo(ayer)}</strong> hasta que termine el día de
-            hoy. Después, ese partido queda cerrado.
+            <strong className="text-white">{formatoLargo(ayer)}</strong> hasta que
+            termine el día de hoy. Después, ese partido queda cerrado.
           </>
         ) : (
-          'Tu reto arrancó hoy, así que todavía no hay día anterior para repescar. Andá a ganar el partido de hoy.'
+          'Tu reto arrancó hoy, así que todavía no hay día anterior para corregir. Andá a ganar el partido de hoy.'
         )}
       </p>
 
@@ -54,8 +54,8 @@ export default async function RepescaPage() {
         </div>
       ) : null}
 
-      <p className="mt-8 text-center text-xs text-neutral-400">
-        Solo se puede repescar el día inmediato anterior. Los partidos más
+      <p className="mt-8 text-center text-xs text-neutral-500">
+        Solo se puede corregir el día inmediato anterior. Los partidos más
         viejos quedan como se jugaron.
       </p>
     </main>

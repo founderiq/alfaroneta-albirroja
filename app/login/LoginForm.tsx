@@ -40,13 +40,13 @@ export default function LoginForm() {
       <Link
         href="/"
         aria-label="Volver"
-        className="grid size-9 place-items-center rounded-full bg-white text-lg shadow-sm"
+        className="grid size-9 place-items-center rounded-full border border-white/10 bg-superficie text-lg text-white"
       >
         ←
       </Link>
 
       <h1 className="mt-6 text-3xl font-black">Iniciar sesión</h1>
-      <p className="mt-2 text-neutral-600">
+      <p className="mt-2 text-tenue">
         Entrá con tu correo y contraseña. La sesión queda guardada en este
         dispositivo: la próxima vez que toques la pulsera entrás directo.
       </p>
@@ -77,7 +77,7 @@ export default function LoginForm() {
             autoComplete="current-password"
           />
           <p className="text-sm">
-            <Link href="/recuperar" className="font-semibold text-neutral-600 underline">
+            <Link href="/recuperar" className="font-semibold text-tenue underline">
               Olvidé mi contraseña
             </Link>
           </p>
@@ -93,9 +93,9 @@ export default function LoginForm() {
             >
               Entrar
             </BotonPrimario>
-            <p className="text-center text-sm text-neutral-600">
+            <p className="text-center text-sm text-tenue">
               ¿Todavía no activaste tu pulsera?{' '}
-              <Link href="/onboarding" className="font-bold text-neutral-900 underline">
+              <Link href="/onboarding" className="font-bold text-white underline">
                 Crear cuenta
               </Link>
             </p>

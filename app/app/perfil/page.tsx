@@ -24,55 +24,55 @@ export default async function PerfilPage() {
     <main className="flex flex-1 flex-col">
       <Link
         href="/app"
-        className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold shadow-sm"
+        className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-superficie px-4 py-2 text-sm font-bold text-white"
       >
         ← El partido de hoy
       </Link>
 
       <h1 className="text-3xl font-black">Mi perfil</h1>
 
-      <div className="mt-6 rounded-3xl bg-white p-5">
-        <p className="text-xs font-bold tracking-widest text-neutral-400">JUGADOR/A</p>
-        <p className="mt-1 text-xl font-black">{perfil.nombre_apellido}</p>
-        <p className="text-sm text-neutral-500">{perfil.correo}</p>
+      <div className="mt-6 rounded-2xl border border-white/10 bg-superficie p-5">
+        <p className="text-xs font-bold tracking-widest text-rojo">JUGADOR/A</p>
+        <p className="mt-1 text-xl font-black text-white">{perfil.nombre_apellido}</p>
+        <p className="text-sm text-tenue">{perfil.correo}</p>
         <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
           <div>
-            <dt className="text-neutral-400">Objetivo</dt>
-            <dd className="font-semibold">{perfil.objetivo ?? '—'}</dd>
+            <dt className="text-tenue">Objetivo</dt>
+            <dd className="font-semibold text-white">{perfil.objetivo ?? '—'}</dd>
           </div>
           <div>
-            <dt className="text-neutral-400">Punto de partida</dt>
-            <dd className="font-semibold">{perfil.nivel ?? '—'}</dd>
+            <dt className="text-tenue">Punto de partida</dt>
+            <dd className="font-semibold text-white">{perfil.nivel ?? '—'}</dd>
           </div>
           <div>
-            <dt className="text-neutral-400">Frecuencia</dt>
-            <dd className="font-semibold">
+            <dt className="text-tenue">Frecuencia</dt>
+            <dd className="font-semibold text-white">
               {perfil.frecuencia_entrenamiento} días/semana
             </dd>
           </div>
           <div>
-            <dt className="text-neutral-400">Reto actual desde</dt>
-            <dd className="font-semibold">{formatoLargo(fechaInicio)}</dd>
+            <dt className="text-tenue">Reto actual desde</dt>
+            <dd className="font-semibold text-white">{formatoLargo(fechaInicio)}</dd>
           </div>
         </dl>
       </div>
 
-      <div className="mt-4 rounded-3xl bg-white p-5">
-        <p className="text-xs font-bold tracking-widest text-neutral-400">
+      <div className="mt-4 rounded-2xl border border-white/10 bg-superficie p-5">
+        <p className="text-xs font-bold tracking-widest text-rojo">
           HÁBITO CAPITÁN · DATO PARA LA GARANTÍA
         </p>
-        <p className="mt-2 text-3xl font-black">
+        <p className="mt-2 text-3xl font-black text-white">
           {metricas.capitanCumplidos}
-          <span className="text-base font-bold text-neutral-400">
+          <span className="text-base font-bold text-tenue">
             {' '}
             / {metaCapitan} entrenamientos meta
           </span>
         </p>
-        <p className="mt-1 text-sm text-neutral-600">
-          Cumplimiento del capitán: <strong>{pctCapitan}%</strong> de tu meta de{' '}
-          {perfil.frecuencia_entrenamiento} días por semana en {DIAS_RETO} días.
-          Este es el dato que se mira para la garantía del reto (80%+ al
-          completar los 60 días).
+        <p className="mt-1 text-sm text-tenue">
+          Cumplimiento del capitán: <strong className="text-white">{pctCapitan}%</strong> de
+          tu meta de {perfil.frecuencia_entrenamiento} días por semana en {DIAS_RETO}{' '}
+          días. Este es el dato que se mira para la garantía del reto (80%+ al
+          completar los 60 partidos).
         </p>
       </div>
 
@@ -83,7 +83,7 @@ export default async function PerfilPage() {
       <form action={cerrarSesion} className="mt-6">
         <button
           type="submit"
-          className="w-full rounded-2xl bg-white px-4 py-3.5 font-semibold text-neutral-500 shadow-sm"
+          className="w-full rounded-full border border-white/10 bg-superficie px-4 py-3.5 font-semibold text-tenue"
         >
           Cerrar sesión
         </button>

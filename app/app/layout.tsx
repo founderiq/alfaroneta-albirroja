@@ -22,10 +22,10 @@ export default async function AppLayout({
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col">
-      <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f4f4f2]/95 px-5 py-4 backdrop-blur">
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/5 bg-fondo/90 px-5 py-4 backdrop-blur">
         <Link href="/app" className="leading-none">
-          <span className="block text-sm font-black tracking-[0.2em]">ALFARONETA</span>
-          <span className="mt-0.5 block text-[10px] font-bold tracking-[0.3em] text-verde">
+          <span className="block text-sm font-black tracking-[0.2em] text-white">ALFARONETA</span>
+          <span className="mt-0.5 block text-[10px] font-bold tracking-[0.3em] text-rojo">
             LA PRETEMPORADA
           </span>
         </Link>

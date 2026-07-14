@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cargarContexto } from '@/lib/datos';
-import { FECHAS_CAMPEONATO } from '@/lib/reto';
+import { DIAS_RETO } from '@/lib/reto';
 import PlayerCard from '@/components/PlayerCard';
 
 export const dynamic = 'force-dynamic';
@@ -17,13 +17,13 @@ export default async function TarjetaPage() {
     <main className="flex flex-1 flex-col">
       <Link
         href="/app"
-        className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold shadow-sm"
+        className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-superficie px-4 py-2 text-sm font-bold text-white"
       >
         ← El partido de hoy
       </Link>
 
       <h1 className="text-3xl font-black">Mi Tarjeta de Jugador</h1>
-      <p className="mt-2 text-neutral-600">
+      <p className="mt-2 text-tenue">
         Tu carrera en esta Pretemporada. Acá solo se cuentan las victorias.
       </p>
 
@@ -35,13 +35,13 @@ export default async function TarjetaPage() {
           jugados={metricas.jugados}
           efectividad={metricas.efectividad}
           racha={metricas.racha}
-          fecha={metricas.fechaCampeonato}
-          totalFechas={FECHAS_CAMPEONATO}
+          partido={Math.min(metricas.diaHoy, DIAS_RETO)}
+          totalPartidos={DIAS_RETO}
         />
       </div>
 
-      <div className="mt-6 rounded-3xl bg-white p-5 text-sm text-neutral-600">
-        <p className="font-bold text-neutral-900">Niveles de tarjeta</p>
+      <div className="mt-6 rounded-2xl border border-white/10 bg-superficie p-5 text-sm text-tenue">
+        <p className="font-bold text-white">Niveles de tarjeta</p>
         <p className="mt-2">
           🥉 Bronce: 0-19 partidos ganados · 🥈 Plata: 20-39 · 🥇 Oro: 40+
         </p>

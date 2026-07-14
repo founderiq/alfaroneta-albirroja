@@ -41,9 +41,9 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
   };
 
   return (
-    <div className="rounded-3xl bg-white p-5">
+    <div className="rounded-2xl border border-white/10 bg-superficie p-5">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-bold tracking-widest text-neutral-400">
+        <p className="text-xs font-bold tracking-widest text-rojo">
           MIS HÁBITOS DE APOYO
         </p>
         {!editando ? (
@@ -53,7 +53,7 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
               setSeleccion(actuales);
               setEditando(true);
             }}
-            className="text-sm font-bold underline"
+            className="text-sm font-bold text-white underline"
           >
             Editar
           </button>
@@ -65,7 +65,7 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
           {actuales.map((slug) => {
             const h = HABITOS_APOYO.find((x) => x.slug === slug);
             return (
-              <li key={slug} className="font-semibold">
+              <li key={slug} className="font-semibold text-white">
                 <span className="mr-2">{h?.emoji}</span>
                 {h?.label ?? slug}
               </li>
@@ -74,7 +74,7 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
         </ul>
       ) : (
         <div className="mt-3">
-          <p className="mb-3 text-sm text-neutral-600">
+          <p className="mb-3 text-sm text-tenue">
             Elegí hasta {MAX_APOYOS}. Lo ya jugado no cambia; hoy se recalcula
             con los nuevos.
           </p>
@@ -84,10 +84,10 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
                 key={h.slug}
                 type="button"
                 onClick={() => toggle(h.slug)}
-                className={`flex w-full items-center justify-between gap-3 rounded-2xl border-2 bg-neutral-50 p-4 text-left text-sm font-semibold transition ${
+                className={`flex w-full items-center justify-between gap-3 rounded-2xl border-2 p-4 text-left text-sm font-semibold text-white transition ${
                   seleccion.includes(h.slug)
-                    ? 'border-verde'
-                    : 'border-transparent'
+                    ? 'border-verde bg-verde/10'
+                    : 'border-white/10 bg-superficie2'
                 }`}
               >
                 <span>
@@ -99,7 +99,7 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
             ))}
           </div>
           {aviso ? (
-            <p className="mt-3 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            <p className="mt-3 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-300">
               {aviso}
             </p>
           ) : null}
@@ -107,7 +107,7 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
             <button
               type="button"
               onClick={() => setEditando(false)}
-              className="h-12 flex-1 rounded-2xl bg-neutral-100 font-bold"
+              className="h-12 flex-1 rounded-full border border-white/15 bg-white/5 font-bold text-white"
             >
               Cancelar
             </button>
@@ -115,7 +115,7 @@ export default function EditarApoyos({ actuales }: { actuales: string[] }) {
               type="button"
               onClick={guardar}
               disabled={pendiente || seleccion.length < 1}
-              className="h-12 flex-1 rounded-2xl bg-neutral-900 font-bold text-white disabled:opacity-50"
+              className="h-12 flex-1 rounded-full bg-rojo font-bold text-white disabled:opacity-50"
             >
               {pendiente ? 'Guardando…' : 'Guardar'}
             </button>

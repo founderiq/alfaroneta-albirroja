@@ -39,7 +39,7 @@ export default function RecuperarPage() {
       <Link
         href="/login"
         aria-label="Volver"
-        className="grid size-9 place-items-center rounded-full bg-white text-lg shadow-sm"
+        className="grid size-9 place-items-center rounded-full border border-white/10 bg-superficie text-lg text-white"
       >
         ←
       </Link>
@@ -47,10 +47,10 @@ export default function RecuperarPage() {
       <h1 className="mt-6 text-3xl font-black">Recuperar contraseña</h1>
 
       {enviado ? (
-        <div className="mt-8 rounded-3xl bg-white p-6">
+        <div className="mt-8 rounded-3xl border border-white/10 bg-superficie p-6">
           <p className="text-2xl">📬</p>
           <p className="mt-3 font-semibold">Listo, revisá tu correo.</p>
-          <p className="mt-2 text-neutral-600">
+          <p className="mt-2 text-tenue">
             Te mandamos un link a <strong>{correo}</strong> para crear una
             contraseña nueva. Si no aparece, mirá en spam.
           </p>
@@ -63,7 +63,7 @@ export default function RecuperarPage() {
             void enviar();
           }}
         >
-          <p className="mt-2 text-neutral-600">
+          <p className="mt-2 text-tenue">
             Poné tu correo y te mandamos un link para crear una contraseña nueva.
           </p>
           <div className="mt-8">

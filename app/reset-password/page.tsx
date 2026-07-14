@@ -65,10 +65,10 @@ export default function ResetPasswordPage() {
       <h1 className="mt-6 text-3xl font-black">Nueva contraseña</h1>
 
       {!listo ? (
-        <div className="mt-8 rounded-3xl bg-white p-6">
-          <p className="text-neutral-600">
+        <div className="mt-8 rounded-3xl border border-white/10 bg-superficie p-6">
+          <p className="text-tenue">
             Este link no es válido o ya venció.{' '}
-            <Link href="/recuperar" className="font-bold text-neutral-900 underline">
+            <Link href="/recuperar" className="font-bold text-white underline">
               Pedí uno nuevo acá.
             </Link>
           </p>
@@ -81,7 +81,7 @@ export default function ResetPasswordPage() {
             void guardar();
           }}
         >
-          <p className="mt-2 text-neutral-600">Elegí tu contraseña nueva.</p>
+          <p className="mt-2 text-tenue">Elegí tu contraseña nueva.</p>
           <div className="mt-8 space-y-4">
             <CampoTexto
               label="Contraseña nueva"

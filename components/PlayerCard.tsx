@@ -34,8 +34,8 @@ export default function PlayerCard({
   jugados,
   efectividad,
   racha,
-  fecha,
-  totalFechas,
+  partido,
+  totalPartidos,
 }: {
   nombre: string;
   nivel: NivelTarjeta;
@@ -43,8 +43,8 @@ export default function PlayerCard({
   jugados: number;
   efectividad: number | null;
   racha: number;
-  fecha: number;
-  totalFechas: number;
+  partido: number;
+  totalPartidos: number;
 }) {
   const estilo = ESTILOS[nivel];
 
@@ -96,11 +96,11 @@ export default function PlayerCard({
         </div>
         <div>
           <p className="text-xl font-black">
-            {fecha}
-            <span className="text-sm font-bold text-white/60">/{totalFechas}</span>
+            {partido}
+            <span className="text-sm font-bold text-white/60">/{totalPartidos}</span>
           </p>
           <p className="mt-0.5 text-[10px] font-bold tracking-widest text-white/60">
-            FECHA
+            PARTIDO
           </p>
         </div>
         <div>

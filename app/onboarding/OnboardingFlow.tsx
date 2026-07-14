@@ -176,14 +176,14 @@ export default function OnboardingFlow() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5">
       {paso <= TOTAL_PASOS ? (
-        <header className="sticky top-0 z-10 -mx-5 bg-[#f4f4f2]/95 px-5 pt-5 pb-3 backdrop-blur">
+        <header className="sticky top-0 z-10 -mx-5 bg-fondo/90 px-5 pt-5 pb-3 backdrop-blur">
           <div className="mb-3 flex items-center justify-between">
             {paso > 1 ? (
               <button
                 type="button"
                 onClick={volver}
                 aria-label="Volver"
-                className="grid size-9 place-items-center rounded-full bg-white text-lg shadow-sm"
+                className="grid size-9 place-items-center rounded-full border border-white/10 bg-superficie text-lg text-white"
               >
                 ←
               </button>
@@ -191,12 +191,12 @@ export default function OnboardingFlow() {
               <Link
                 href="/"
                 aria-label="Volver al inicio"
-                className="grid size-9 place-items-center rounded-full bg-white text-lg shadow-sm"
+                className="grid size-9 place-items-center rounded-full border border-white/10 bg-superficie text-lg text-white"
               >
                 ←
               </Link>
             )}
-            <span className="text-xs font-bold tracking-widest text-neutral-400">
+            <span className="text-xs font-bold tracking-widest text-tenue">
               PASO {paso} DE {TOTAL_PASOS}
             </span>
           </div>
@@ -258,11 +258,11 @@ export default function OnboardingFlow() {
           titulo="Tu hábito capitán: moverte 45 minutos"
           botones={<BotonPrimario onClick={avanzar}>Lo acepto</BotonPrimario>}
         >
-          <div className="rounded-3xl bg-white p-6">
-            <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-verde-suave text-2xl">
+          <div className="rounded-3xl border border-white/10 bg-superficie p-6">
+            <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-rojo/15 text-2xl">
               🏃
             </div>
-            <p className="text-base leading-relaxed text-neutral-700">
+            <p className="text-base leading-relaxed text-neutral-300">
               Es el innegociable. Vos elegís cómo: gym, correr, caminar, fútbol,
               bici, lo que te haga bien. Lo importante no es el cómo, es moverte
               todos los días que te toque.
@@ -438,8 +438,8 @@ export default function OnboardingFlow() {
             </BotonPrimario>
           }
         >
-          <div className="rounded-3xl bg-white p-6">
-            <p className="text-base leading-relaxed text-neutral-700">
+          <div className="rounded-3xl border border-white/10 bg-superficie p-6">
+            <p className="text-base leading-relaxed text-neutral-300">
               Entiendo que la actividad física es mi responsabilidad. Si tengo una
               lesión, condición médica o cualquier duda, voy a consultar con un
               profesional antes de empezar. Alfaroneta no reemplaza consejo médico.
@@ -448,8 +448,8 @@ export default function OnboardingFlow() {
           <button
             type="button"
             onClick={() => set('disclaimer', !datos.disclaimer)}
-            className={`mt-4 flex w-full items-center gap-3 rounded-3xl border-2 bg-white p-5 text-left font-semibold transition ${
-              datos.disclaimer ? 'border-verde' : 'border-transparent'
+            className={`mt-4 flex w-full items-center gap-3 rounded-2xl border-2 p-5 text-left font-semibold text-white transition ${
+              datos.disclaimer ? 'border-verde bg-verde/10' : 'border-white/10 bg-superficie'
             }`}
           >
             <CheckCirculo activo={datos.disclaimer} />
@@ -477,7 +477,7 @@ export default function OnboardingFlow() {
           }
         >
           <label className="block">
-            <span className="mb-1.5 block text-sm font-semibold text-neutral-700">
+            <span className="mb-1.5 block text-sm font-semibold text-neutral-300">
               Código de activación
             </span>
             <input
@@ -488,10 +488,10 @@ export default function OnboardingFlow() {
               autoCapitalize="characters"
               autoCorrect="off"
               spellCheck={false}
-              className="h-14 w-full rounded-2xl border-2 border-neutral-200 bg-white px-4 text-center font-mono text-lg tracking-widest outline-none transition placeholder:text-neutral-300 focus:border-neutral-900"
+              className="h-14 w-full rounded-2xl border-2 border-white/10 bg-superficie2 px-4 text-center font-mono text-lg tracking-widest text-white outline-none transition placeholder:text-neutral-600 focus:border-rojo"
             />
           </label>
-          <p className="mt-3 text-sm text-neutral-500">
+          <p className="mt-3 text-sm text-tenue">
             El código casa tu pulsera con tu cuenta. Después de este paso no se
             pide nunca más.
           </p>
@@ -508,34 +508,34 @@ export default function OnboardingFlow() {
             <h1 className="text-4xl leading-tight font-black">
               ¡Estás dentro! Arranca tu Pretemporada.
             </h1>
-            <p className="mt-3 text-lg text-neutral-600">
+            <p className="mt-3 text-lg text-tenue">
               Este es tu plan de juego:
             </p>
 
             <div className="mt-6 space-y-3">
-              <div className="rounded-3xl bg-white p-5">
-                <p className="text-xs font-bold tracking-widest text-neutral-400">
+              <div className="rounded-2xl border border-white/10 bg-superficie p-5">
+                <p className="text-xs font-bold tracking-widest text-rojo">
                   HÁBITO CAPITÁN
                 </p>
-                <p className="mt-1 font-semibold">{CAPITAN.label}</p>
+                <p className="mt-1 font-semibold text-white">{CAPITAN.label}</p>
               </div>
-              <div className="rounded-3xl bg-white p-5">
-                <p className="text-xs font-bold tracking-widest text-neutral-400">
+              <div className="rounded-2xl border border-white/10 bg-superficie p-5">
+                <p className="text-xs font-bold tracking-widest text-rojo">
                   HÁBITOS DE APOYO
                 </p>
                 <ul className="mt-1 space-y-1">
                   {datos.apoyos.map((slug) => (
-                    <li key={slug} className="font-semibold">
+                    <li key={slug} className="font-semibold text-white">
                       {labelDeApoyo(slug)}
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="rounded-3xl bg-white p-5">
-                <p className="text-xs font-bold tracking-widest text-neutral-400">
+              <div className="rounded-2xl border border-white/10 bg-superficie p-5">
+                <p className="text-xs font-bold tracking-widest text-rojo">
                   FRECUENCIA
                 </p>
-                <p className="mt-1 font-semibold">
+                <p className="mt-1 font-semibold text-white">
                   {datos.frecuencia} días de entrenamiento por semana
                 </p>
               </div>
@@ -569,7 +569,7 @@ function Paso({
   return (
     <div className="flex flex-1 flex-col pt-6">
       <h1 className="text-3xl leading-tight font-black">{titulo}</h1>
-      {subtitulo ? <p className="mt-2 text-neutral-600">{subtitulo}</p> : null}
+      {subtitulo ? <p className="mt-2 text-tenue">{subtitulo}</p> : null}
       <div className="mt-6 flex-1">{children}</div>
       <PieSticky>
         <div className="space-y-3">{botones}</div>

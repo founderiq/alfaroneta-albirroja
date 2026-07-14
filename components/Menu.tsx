@@ -7,11 +7,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { declararDescansoHoy } from '@/app/actions/dia';
 import { cerrarSesion, reiniciarReto } from '@/app/actions/cuenta';
+import { ReglasModal } from '@/components/ReglasReto';
 
 export default function Menu() {
   const router = useRouter();
   const [abierto, setAbierto] = useState(false);
   const [confirmandoReinicio, setConfirmandoReinicio] = useState(false);
+  const [verReglas, setVerReglas] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
   const [pendiente, startTransition] = useTransition();
 
@@ -53,7 +55,7 @@ export default function Menu() {
         type="button"
         aria-label="Abrir menú"
         onClick={() => setAbierto(true)}
-        className="grid size-10 place-items-center rounded-full bg-white shadow-sm"
+        className="grid size-10 place-items-center rounded-full border border-white/10 bg-superficie text-white"
       >
         <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
           <path d="M1 1h16M1 7h16M1 13h16" />
@@ -66,34 +68,37 @@ export default function Menu() {
             type="button"
             aria-label="Cerrar menú"
             onClick={cerrar}
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/70"
           />
-          <div className="absolute inset-x-0 top-0 mx-auto max-w-md rounded-b-3xl bg-white p-5 shadow-xl">
+          <div className="absolute inset-x-0 top-0 mx-auto max-w-md rounded-b-3xl border-b border-white/10 bg-superficie p-5 shadow-2xl">
             <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-black tracking-[0.2em]">MENÚ</span>
+              <span className="text-sm font-black tracking-[0.2em] text-white">MENÚ</span>
               <button
                 type="button"
                 onClick={cerrar}
                 aria-label="Cerrar"
-                className="grid size-9 place-items-center rounded-full bg-neutral-100 text-lg"
+                className="grid size-9 place-items-center rounded-full bg-superficie2 text-lg text-white"
               >
                 ✕
               </button>
             </div>
 
             {aviso ? (
-              <p className="mb-3 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+              <p className="mb-3 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-300">
                 {aviso}
               </p>
             ) : null}
 
             {!confirmandoReinicio ? (
               <nav className="space-y-1">
+                <ItemBoton onClick={() => setVerReglas(true)} emoji="📖">
+                  Cómo funciona el reto
+                </ItemBoton>
                 <ItemBoton onClick={marcarDescanso} disabled={pendiente} emoji="😴">
                   Marcar hoy como día de descanso
                 </ItemBoton>
                 <ItemLink href="/app/repesca" onClick={cerrar} emoji="↩️">
-                  Volver al día anterior (repesca)
+                  Corregir día anterior
                 </ItemLink>
                 <ItemLink href="/app/rutinas" onClick={cerrar} emoji="🏋️">
                   Rutinas
@@ -116,16 +121,16 @@ export default function Menu() {
                     type="button"
                     onClick={() => startTransition(() => cerrarSesion())}
                     disabled={pendiente}
-                    className="w-full rounded-2xl bg-neutral-100 px-4 py-3.5 text-left font-semibold text-neutral-500"
+                    className="w-full rounded-2xl bg-superficie2 px-4 py-3.5 text-left font-semibold text-tenue"
                   >
                     Cerrar sesión
                   </button>
                 </div>
               </nav>
             ) : (
-              <div className="rounded-3xl bg-neutral-50 p-5">
-                <p className="font-bold">¿Reiniciar tu reto desde el día 0?</p>
-                <p className="mt-2 text-sm text-neutral-600">
+              <div className="rounded-2xl border border-white/10 bg-superficie2 p-5">
+                <p className="font-bold text-white">¿Reiniciar tu reto desde el Partido 0?</p>
+                <p className="mt-2 text-sm text-tenue">
                   Arrancás una carrera nueva desde hoy. Tu historial anterior se
                   conserva; nada se borra. Solo vos podés tomar esta decisión:
                   el sistema nunca reinicia solo.
@@ -134,7 +139,7 @@ export default function Menu() {
                   <button
                     type="button"
                     onClick={() => setConfirmandoReinicio(false)}
-                    className="h-12 flex-1 rounded-2xl bg-white font-bold shadow-sm"
+                    className="h-12 flex-1 rounded-full border border-white/15 bg-white/5 font-bold text-white"
                   >
                     No, sigo
                   </button>
@@ -142,7 +147,7 @@ export default function Menu() {
                     type="button"
                     onClick={reiniciar}
                     disabled={pendiente}
-                    className="h-12 flex-1 rounded-2xl bg-neutral-900 font-bold text-white disabled:opacity-50"
+                    className="h-12 flex-1 rounded-full bg-rojo font-bold text-white disabled:opacity-50"
                   >
                     {pendiente ? 'Un momento…' : 'Sí, reiniciar'}
                   </button>
@@ -152,6 +157,8 @@ export default function Menu() {
           </div>
         </div>
       ) : null}
+
+      {verReglas ? <ReglasModal onClose={() => setVerReglas(false)} /> : null}
     </>
   );
 }
@@ -171,7 +178,7 @@ function ItemLink({
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 rounded-2xl px-4 py-3.5 font-semibold transition active:bg-neutral-100"
+      className="flex items-center gap-3 rounded-2xl px-4 py-3.5 font-semibold text-white transition active:bg-white/5"
     >
       <span className="text-lg" aria-hidden>
         {emoji}
@@ -197,7 +204,7 @@ function ItemBoton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left font-semibold transition active:bg-neutral-100 disabled:opacity-50"
+      className="flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left font-semibold text-white transition active:bg-white/5 disabled:opacity-50"
     >
       <span className="text-lg" aria-hidden>
         {emoji}
