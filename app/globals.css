@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  /* Paleta Alfaroneta: base clara, negro para acción, verde para éxito */
+  --color-campo: #f4f4f2; /* fondo gris muy claro */
+  --color-tinta: #121212; /* casi negro */
+  --color-verde: #16a34a; /* selección / éxito */
+  --color-verde-suave: #dcfce7;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--color-campo);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* espacio para el botón sticky de abajo en iPhones con notch */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
