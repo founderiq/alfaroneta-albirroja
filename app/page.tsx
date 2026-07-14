@@ -35,7 +35,7 @@ export default async function Bienvenida() {
           <br />
           termina.
           <br />
-          <span className="text-rojo">La garra queda.</span>
+          <span className="text-rojo">La garra continúa.</span>
         </h1>
         <p className="mt-5 text-lg text-tenue">
           60 días para volver a tu mejor versión. Tocás, entrenás, ganás el día.
