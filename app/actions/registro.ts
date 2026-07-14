@@ -121,38 +121,16 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
     log('deshaciendo: borrando usuario', userId);
     await admin.auth.admin.deleteUser(userId).catch((e) => log('fallo al borrar usuario:', e));
   };
-
-  // 3. Reserva ATÓMICA del código: solo pasa si sigue sin usarse.
-  //    Si dos personas cargan el mismo código a la vez, una sola gana.
-  const { data: reservado, error: errorReserva } = await admin
-    .from('codes')
-    .update({ usado: true, profile_id: userId })
-    .eq('id', fila.id)
-    .eq('usado', false)
-    .select('id');
-
-  if (errorReserva || !reservado || reservado.length === 0) {
-    log(
-      'reserva del código falló: error=',
-      errorReserva?.message,
-      'filas afectadas=',
-      reservado?.length ?? 'null',
-    );
-    await limpiarUsuario();
-    return { ok: false, error: 'Ese código ya fue usado para activar otra cuenta.' };
-  }
-  log('código reservado ok');
-
-  const liberarCodigo = async () => {
-    log('deshaciendo: liberando código', fila.id);
-    const { error } = await admin
-      .from('codes')
-      .update({ usado: false, profile_id: null })
-      .eq('id', fila.id);
-    if (error) log('fallo al liberar código:', error.message);
+  const borrarPerfil = async () => {
+    log('deshaciendo: borrando perfil', userId);
+    const { error } = await admin.from('profiles').delete().eq('id', userId);
+    if (error) log('fallo al borrar perfil:', error.message);
   };
 
-  // 4. Perfil + carrera inicial.
+  // 3. Crear el perfil ANTES de tocar el código.
+  //    Ojo: codes.profile_id tiene una FK a profiles.id, así que el perfil
+  //    tiene que existir antes de poder vincular el código. Al revés, la base
+  //    rechaza el update del código (violación de FK) y parece "código usado".
   const { error: errorPerfil } = await admin.from('profiles').insert({
     id: userId,
     nombre_apellido: datos.nombre.trim(),
@@ -169,12 +147,44 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
 
   if (errorPerfil) {
     log('error creando perfil:', errorPerfil.message, errorPerfil.code, errorPerfil.details);
-    await liberarCodigo();
     await limpiarUsuario();
     return { ok: false, error: 'No pudimos crear tu perfil. Probá de nuevo.' };
   }
   log('perfil creado ok');
 
+  // 4. Reserva ATÓMICA + vínculo del código: solo pasa si sigue sin usarse.
+  //    El perfil ya existe, así que setear profile_id no viola la FK.
+  //    Si dos personas cargan el mismo código a la vez, una sola gana el update.
+  const { data: reservado, error: errorReserva } = await admin
+    .from('codes')
+    .update({ usado: true, profile_id: userId })
+    .eq('id', fila.id)
+    .eq('usado', false)
+    .select('id');
+
+  if (errorReserva || !reservado || reservado.length === 0) {
+    log(
+      'reserva del código falló: error=',
+      errorReserva?.message,
+      'filas afectadas=',
+      reservado?.length ?? 'null',
+    );
+    await borrarPerfil();
+    await limpiarUsuario();
+    return { ok: false, error: 'Ese código ya fue usado para activar otra cuenta.' };
+  }
+  log('código reservado y vinculado ok');
+
+  const liberarCodigo = async () => {
+    log('deshaciendo: liberando código', fila.id);
+    const { error } = await admin
+      .from('codes')
+      .update({ usado: false, profile_id: null })
+      .eq('id', fila.id);
+    if (error) log('fallo al liberar código:', error.message);
+  };
+
+  // 5. Carrera inicial del reto.
   const { error: errorRun } = await admin.from('challenge_runs').insert({
     profile_id: userId,
     fecha_inicio: hoy,
@@ -183,8 +193,8 @@ export async function registrarCuenta(datos: DatosRegistro): Promise<ResultadoRe
 
   if (errorRun) {
     log('error creando challenge_run:', errorRun.message, errorRun.code);
-    await admin.from('profiles').delete().eq('id', userId);
     await liberarCodigo();
+    await borrarPerfil();
     await limpiarUsuario();
     return { ok: false, error: 'No pudimos arrancar tu reto. Probá de nuevo.' };
   }
