@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cargarContexto } from '@/lib/datos';
 import { formatoLargo } from '@/lib/fecha';
-import { DIAS_RETO } from '@/lib/reto';
 import { cerrarSesion } from '@/app/actions/cuenta';
 import EditarApoyos from './EditarApoyos';
 
@@ -12,13 +11,7 @@ export default async function PerfilPage() {
   const ctx = await cargarContexto();
   if (!ctx) redirect('/');
 
-  const { perfil, fechaInicio, metricas } = ctx;
-
-  // Dato de la garantía: cumplimiento del capitán contra la meta de frecuencia.
-  // Meta = frecuencia semanal proyectada a los 60 días.
-  const metaCapitan = Math.round((perfil.frecuencia_entrenamiento * DIAS_RETO) / 7);
-  const pctCapitan =
-    metaCapitan > 0 ? Math.round((metricas.capitanCumplidos / metaCapitan) * 100) : 0;
+  const { perfil, fechaInicio } = ctx;
 
   return (
     <main className="flex flex-1 flex-col">
@@ -57,30 +50,18 @@ export default async function PerfilPage() {
         </dl>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-white/10 bg-superficie p-5">
-        <p className="text-xs font-bold tracking-widest text-rojo">
-          HÁBITO CAPITÁN · DATO PARA LA GARANTÍA
-        </p>
-        <p className="mt-2 text-3xl font-black text-white">
-          {metricas.capitanCumplidos}
-          <span className="text-base font-bold text-tenue">
-            {' '}
-            / {metaCapitan} entrenamientos meta
-          </span>
-        </p>
-        <p className="mt-1 text-sm text-tenue">
-          Cumplimiento del capitán: <strong className="text-white">{pctCapitan}%</strong> de
-          tu meta de {perfil.frecuencia_entrenamiento} días por semana en {DIAS_RETO}{' '}
-          días. Este es el dato que se mira para la garantía del reto (80%+ al
-          completar los 60 partidos).
-        </p>
-      </div>
-
       <div className="mt-4">
         <EditarApoyos actuales={perfil.habitos_apoyo} />
       </div>
 
-      <form action={cerrarSesion} className="mt-6">
+      <Link
+        href="/recuperar"
+        className="mt-4 block w-full rounded-full border border-white/10 bg-superficie px-4 py-3.5 text-center font-semibold text-white"
+      >
+        Olvidé mi contraseña
+      </Link>
+
+      <form action={cerrarSesion} className="mt-3">
         <button
           type="submit"
           className="w-full rounded-full border border-white/10 bg-superficie px-4 py-3.5 font-semibold text-tenue"

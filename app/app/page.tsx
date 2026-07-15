@@ -49,7 +49,7 @@ export default async function PartidoDeHoy() {
           </span>
         )}
         <span className="rounded-full border border-white/10 bg-superficie px-4 py-2 text-sm font-bold text-white">
-          🔥 Racha: {metricas.racha}
+          🔥 Racha de partidos: {metricas.racha}
         </span>
         {metricas.tarjeta ? (
           <span
@@ -83,6 +83,7 @@ export default async function PartidoDeHoy() {
             inicial={logHoy}
             apoyos={apoyosElegidos}
             modo="hoy"
+            nombre={nombreDePila}
           />
         </div>
       ) : (

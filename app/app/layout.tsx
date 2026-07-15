@@ -22,7 +22,7 @@ export default async function AppLayout({
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col">
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/5 bg-fondo/90 px-5 py-4 backdrop-blur">
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/10 bg-fondo px-5 py-4">
         <Link href="/app" className="leading-none">
           <span className="block text-sm font-black tracking-[0.2em] text-white">ALFARONETA</span>
           <span className="mt-0.5 block text-[10px] font-bold tracking-[0.3em] text-rojo">
@@ -31,7 +31,7 @@ export default async function AppLayout({
         </Link>
         <Menu />
       </header>
-      <div className="flex flex-1 flex-col px-5 pb-8">{children}</div>
+      <div className="flex flex-1 flex-col px-5 pt-5 pb-8">{children}</div>
     </div>
   );
 }

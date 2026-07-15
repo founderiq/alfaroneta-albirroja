@@ -263,7 +263,7 @@ export default function OnboardingFlow() {
               🏃
             </div>
             <p className="text-base leading-relaxed text-neutral-300">
-              Es el innegociable. Vos elegís cómo: gym, correr, caminar, fútbol,
+              Es el innegociable. Vos elegís cómo: gym, correr, caminar, deportes,
               bici, lo que te haga bien. Lo importante no es el cómo, es moverte
               todos los días que te toque.
             </p>

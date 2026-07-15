@@ -7,19 +7,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { declararDescansoHoy } from '@/app/actions/dia';
 import { cerrarSesion, reiniciarReto } from '@/app/actions/cuenta';
-import { ReglasModal } from '@/components/ReglasReto';
+
+type Confirmacion = 'ninguna' | 'descanso' | 'reinicio';
 
 export default function Menu() {
   const router = useRouter();
   const [abierto, setAbierto] = useState(false);
-  const [confirmandoReinicio, setConfirmandoReinicio] = useState(false);
-  const [verReglas, setVerReglas] = useState(false);
+  const [confirmando, setConfirmando] = useState<Confirmacion>('ninguna');
   const [aviso, setAviso] = useState<string | null>(null);
   const [pendiente, startTransition] = useTransition();
 
   const cerrar = () => {
     setAbierto(false);
-    setConfirmandoReinicio(false);
+    setConfirmando('ninguna');
     setAviso(null);
   };
 
@@ -28,6 +28,7 @@ export default function Menu() {
       const r = await declararDescansoHoy();
       if (!r.ok) {
         setAviso(r.error);
+        setConfirmando('ninguna');
         return;
       }
       cerrar();
@@ -41,6 +42,7 @@ export default function Menu() {
       const r = await reiniciarReto();
       if (!r.ok) {
         setAviso(r.error);
+        setConfirmando('ninguna');
         return;
       }
       cerrar();
@@ -89,12 +91,12 @@ export default function Menu() {
               </p>
             ) : null}
 
-            {!confirmandoReinicio ? (
+            {confirmando === 'ninguna' ? (
               <nav className="space-y-1">
-                <ItemBoton onClick={() => setVerReglas(true)} emoji="📖">
+                <ItemLink href="/app/reglas" onClick={cerrar} emoji="📖">
                   Cómo funciona el reto
-                </ItemBoton>
-                <ItemBoton onClick={marcarDescanso} disabled={pendiente} emoji="😴">
+                </ItemLink>
+                <ItemBoton onClick={() => setConfirmando('descanso')} disabled={pendiente} emoji="😴">
                   Marcar hoy como día de descanso
                 </ItemBoton>
                 <ItemLink href="/app/repesca" onClick={cerrar} emoji="↩️">
@@ -107,7 +109,7 @@ export default function Menu() {
                   Mi Tarjeta de Jugador
                 </ItemLink>
                 <ItemBoton
-                  onClick={() => setConfirmandoReinicio(true)}
+                  onClick={() => setConfirmando('reinicio')}
                   disabled={pendiente}
                   emoji="🔄"
                 >
@@ -127,6 +129,31 @@ export default function Menu() {
                   </button>
                 </div>
               </nav>
+            ) : confirmando === 'descanso' ? (
+              <div className="rounded-2xl border border-white/10 bg-superficie2 p-5">
+                <p className="font-bold text-white">¿Marcar hoy como día de descanso?</p>
+                <p className="mt-2 text-sm text-tenue">
+                  En un día de descanso no hace falta el capitán, pero igual
+                  necesitás cumplir 2 de tus 3 hábitos para ganar el día.
+                </p>
+                <div className="mt-4 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmando('ninguna')}
+                    className="h-12 flex-1 rounded-full border border-white/15 bg-white/5 font-bold text-white"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={marcarDescanso}
+                    disabled={pendiente}
+                    className="h-12 flex-1 rounded-full bg-rojo font-bold text-white disabled:opacity-50"
+                  >
+                    {pendiente ? 'Un momento…' : 'Sí, descanso'}
+                  </button>
+                </div>
+              </div>
             ) : (
               <div className="rounded-2xl border border-white/10 bg-superficie2 p-5">
                 <p className="font-bold text-white">¿Reiniciar tu reto desde el Partido 0?</p>
@@ -138,7 +165,7 @@ export default function Menu() {
                 <div className="mt-4 flex gap-3">
                   <button
                     type="button"
-                    onClick={() => setConfirmandoReinicio(false)}
+                    onClick={() => setConfirmando('ninguna')}
                     className="h-12 flex-1 rounded-full border border-white/15 bg-white/5 font-bold text-white"
                   >
                     No, sigo
@@ -157,8 +184,6 @@ export default function Menu() {
           </div>
         </div>
       ) : null}
-
-      {verReglas ? <ReglasModal onClose={() => setVerReglas(false)} /> : null}
     </>
   );
 }

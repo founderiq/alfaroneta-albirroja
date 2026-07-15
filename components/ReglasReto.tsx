@@ -19,7 +19,7 @@ const REGLAS: { emoji: string; titulo: string; texto: string }[] = [
     emoji: '🏃',
     titulo: 'Tu hábito capitán',
     texto:
-      'Moverte 45 minutos. Es el innegociable. Vos elegís cómo: gym, correr, caminar, fútbol, bici, lo que te haga bien. Lo importante no es el cómo, es aparecer.',
+      'Moverte 45 minutos. Es el innegociable. Vos elegís cómo: gym, correr, caminar, deportes, bici, lo que te haga bien. Lo importante no es el cómo, es aparecer.',
   },
   {
     emoji: '✅',
@@ -31,7 +31,7 @@ const REGLAS: { emoji: string; titulo: string; texto: string }[] = [
     emoji: '⚽',
     titulo: 'Cómo se gana el día',
     texto:
-      'Ganás el partido cuando cumplís el capitán (entrenaste o declaraste descanso) MÁS al menos 2 de tus 3 apoyos. Así de simple: capitán + 2 apoyos.',
+      'Ganás el partido cuando realizás el hábito capitán y al menos 2 de tus 3 hábitos elegidos. Así de simple: capitán + 2 hábitos.',
   },
   {
     emoji: '🤫',
@@ -43,7 +43,7 @@ const REGLAS: { emoji: string; titulo: string; texto: string }[] = [
     emoji: '😴',
     titulo: 'Día de descanso',
     texto:
-      'Lo declarás vos, a la mañana o desde el menú. El descanso cumple el capitán automáticamente, pero igual necesitás 2 apoyos para ganar el día.',
+      'Los días de descanso los elegís vos. En un día de descanso no es necesario hacer el capitán, pero igual necesitás 2 de 3 hábitos para ganar el día.',
   },
   {
     emoji: '🔥',

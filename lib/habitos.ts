@@ -4,7 +4,7 @@ export const CAPITAN = {
   slug: 'capitan',
   label: 'Actividad física · 45 minutos',
   descripcion:
-    'Es el innegociable. Vos elegís cómo: gym, correr, caminar, fútbol, bici, lo que te haga bien.',
+    'Es el innegociable. Vos elegís cómo: gym, correr, caminar, deportes, bici, lo que te haga bien.',
 } as const;
 
 export type HabitoApoyo = {
